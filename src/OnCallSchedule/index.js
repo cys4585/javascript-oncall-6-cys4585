@@ -10,7 +10,6 @@ class OnCallSchedule {
 
     const { workOrderWeekday, workOrderHoliday } = await this.#readWorkOrder();
     workSchedule.setWorkerInCalendar(workOrderWeekday, workOrderHoliday);
-    // workSchedule.modifyToAvoidConsecutiveWorkdays();
 
     OutputView.printOnCallShedule(workSchedule);
   }

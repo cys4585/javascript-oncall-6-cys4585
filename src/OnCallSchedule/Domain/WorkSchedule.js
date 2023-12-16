@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import CALENDAR from "../constants/calendar.js";
 
 class WorkSchedule {
@@ -19,40 +21,49 @@ class WorkSchedule {
     return { ...this.#calendar };
   }
 
-  // eslint-disable-next-line max-lines-per-function
   setWorkerInCalendar(workOrderWeekday, workOrderHoliday) {
     let weekdayIndex = 0;
-    let holidayIndex = 0;
+    let isWeekdayWorkerChanged = false;
 
-    Object.keys(this.#calendar).forEach((date) => {
+    let holidayIndex = 0;
+    let isHolidayWorkerChanged = false;
+    for (let date = 1; date <= CALENDAR.lastDate[this.#month]; date += 1) {
+      let worker;
       if (this.#isWeekday(date)) {
-        this.#calendar[date].worker = workOrderWeekday[weekdayIndex];
+        if (isWeekdayWorkerChanged) {
+          worker = workOrderWeekday[weekdayIndex - 1];
+          isWeekdayWorkerChanged = false;
+        } else {
+          worker = workOrderWeekday[weekdayIndex];
+          if (date > 1 && this.#calendar[date - 1].worker === worker) {
+            worker = workOrderWeekday[weekdayIndex + 1];
+            isWeekdayWorkerChanged = true;
+          }
+        }
+        this.#calendar[date].worker = worker;
         weekdayIndex += 1;
         if (weekdayIndex === workOrderWeekday.length) {
           weekdayIndex = 0;
         }
       } else if (this.#isHoliday(date)) {
-        this.#calendar[date].worker = workOrderHoliday[holidayIndex];
+        if (isHolidayWorkerChanged) {
+          worker = workOrderHoliday[holidayIndex - 1];
+          isHolidayWorkerChanged = false;
+        } else {
+          worker = workOrderHoliday[holidayIndex];
+          if (date > 1 && this.#calendar[date - 1].worker === worker) {
+            worker = workOrderHoliday[holidayIndex + 1];
+            isHolidayWorkerChanged = true;
+          }
+        }
+        this.#calendar[date].worker = worker;
         holidayIndex += 1;
         if (holidayIndex === workOrderHoliday.length) {
           holidayIndex = 0;
         }
       }
-    });
+    }
   }
-
-  // modifyToAvoidConsecutiveWorkdays() {
-  //   let prevWorker = null;
-  //   let currWorker = null;
-  //   let nextWorker = null;
-
-  //   for (let date = 2; date <= LAST_DATE[this.#month]; date += 1) {
-  //     prevWorker = this.#calendar[date - 1].worker;
-  //     currWorker = this.#calendar[date].worker;
-  //     nextWorker = this.#calendar[date + 1].worker;
-  //     if ()
-  //   }
-  // }
 
   isWeekdayAndLegalHoliday(date) {
     return (

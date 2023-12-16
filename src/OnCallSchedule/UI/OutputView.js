@@ -14,6 +14,7 @@ class OutputView {
       ([date, { dayOfWeek, worker }]) => {
         if (workSchedule.isWeekdayAndLegalHoliday(date)) {
           Console.print(`${month}월 ${date}일 ${dayOfWeek}(휴일) ${worker}`);
+          return;
         }
         Console.print(`${month}월 ${date}일 ${dayOfWeek} ${worker}`);
       },
