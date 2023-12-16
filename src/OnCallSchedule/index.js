@@ -9,7 +9,8 @@ class OnCallSchedule {
     const workSchedule = new WorkSchedule(month, firstDayOfWeek);
 
     const { workOrderWeekday, workOrderHoliday } = await this.#readWorkOrder();
-    workSchedule.setWorkerInSchedule(workOrderWeekday, workOrderHoliday);
+    workSchedule.setWorkerInCalendar(workOrderWeekday, workOrderHoliday);
+    // workSchedule.modifyToAvoidConsecutiveWorkdays();
 
     OutputView.printOnCallShedule(workSchedule);
   }
@@ -19,11 +20,7 @@ class OnCallSchedule {
   }
 
   async #readWorkOrder() {
-    return retryOnErrorAsync(async () => {
-      const workOrderWeekday = await InputView.readWorkOrderWeekday();
-      const workOrderHoliday = await InputView.readWorkOrderHoliday();
-      return { workOrderWeekday, workOrderHoliday };
-    });
+    return retryOnErrorAsync(InputView.readWorkOrder);
   }
 }
 
